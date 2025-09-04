@@ -25,6 +25,9 @@ class KnowYourSteelers {
     }
 
     initializeEventListeners() {
+        // Dropdown menu functionality
+        this.initializeDropdown();
+        
         // Game mode selection
         document.querySelectorAll('.game-mode-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -71,6 +74,110 @@ class KnowYourSteelers {
         document.getElementById('back-to-menu').addEventListener('click', () => {
             this.showScreen('main-menu');
         });
+    }
+
+    initializeDropdown() {
+        const dropdownBtn = document.getElementById('dropdown-btn');
+        const dropdown = dropdownBtn.closest('.dropdown');
+        const fetchDataBtn = document.getElementById('fetch-data-btn');
+
+        // Toggle dropdown menu
+        dropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('open');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('open');
+            }
+        });
+
+        // Handle fetch data button
+        fetchDataBtn.addEventListener('click', () => {
+            this.handleFetchData();
+            dropdown.classList.remove('open');
+        });
+    }
+
+    async handleFetchData() {
+        try {
+            // Show loading state
+            const fetchDataBtn = document.getElementById('fetch-data-btn');
+            const originalText = fetchDataBtn.innerHTML;
+            fetchDataBtn.innerHTML = '⏳ Fetching...';
+            fetchDataBtn.disabled = true;
+
+            // Fetch current roster data
+            const rosterData = await this.api.fetchCurrentRoster();
+            
+            // Create downloadable JSON file
+            this.downloadJSON(rosterData, 'currentroster.json');
+            
+            // Show success message
+            this.showSuccessMessage(`Successfully fetched ${rosterData.length} active PIT players!`);
+            
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            this.showError('Failed to fetch roster data. Please try again.');
+        } finally {
+            // Reset button state
+            const fetchDataBtn = document.getElementById('fetch-data-btn');
+            fetchDataBtn.innerHTML = '📥 Fetch data';
+            fetchDataBtn.disabled = false;
+        }
+    }
+
+    downloadJSON(data, filename) {
+        const jsonString = JSON.stringify(data, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.style.display = 'none';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Clean up the URL object
+        URL.revokeObjectURL(url);
+    }
+
+    showSuccessMessage(message) {
+        // Create a temporary success notification
+        const notification = document.createElement('div');
+        notification.className = 'success-notification';
+        notification.innerHTML = `
+            <div style="
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(145deg, var(--success-green), #1e7e34);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+                z-index: 2000;
+                font-weight: 500;
+                max-width: 300px;
+                word-wrap: break-word;
+            ">
+                ✅ ${message}
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Remove notification after 4 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 4000);
     }
 
     showScreen(screenName) {
