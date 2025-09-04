@@ -1,18 +1,23 @@
-// Know Your Steelers - Main Application Logic
+// Know Your Steelers - Reimplemented with new game modes
 class KnowYourSteelers {
     constructor() {
-        this.players = STEELERS_PLAYERS;
+        this.api = window.steelersAPI;
         this.currentMode = null;
         this.currentQuestion = null;
         this.currentAnswer = null;
+        this.currentQuestionData = null;
         this.score = 0;
         this.questionCount = 0;
         this.correctAnswers = 0;
         this.totalCorrect = parseInt(localStorage.getItem('totalCorrect') || '0');
         this.totalPlayed = parseInt(localStorage.getItem('totalPlayed') || '0');
-        this.gameTimer = null;
-        this.timeRemaining = 60;
-        this.maxQuestions = 10; // For non-timed modes
+        this.maxQuestions = 10;
+        this.isLoading = false;
+        
+        // Game mode data
+        this.currentPlayers = [];
+        this.newFaces = [];
+        this.legends = [];
         
         this.initializeEventListeners();
         this.updateStats();
@@ -75,69 +80,67 @@ class KnowYourSteelers {
         document.getElementById(screenName).classList.add('active');
     }
 
-    startGame(mode) {
+    async startGame(mode) {
         this.currentMode = mode;
         this.score = 0;
         this.questionCount = 0;
         this.correctAnswers = 0;
-        this.timeRemaining = 60;
 
         // Update mode display
         const modeNames = {
-            'name-to-number': 'Name to Number',
-            'number-to-name': 'Number to Name',
-            'multiple-choice': 'Multiple Choice',
-            'timed-challenge': 'Timed Challenge'
+            'current-players': 'Current Players',
+            'new-faces': 'New Faces',
+            'team-legends': 'Team Legends'
         };
         document.getElementById('current-mode').textContent = modeNames[mode];
 
-        // Show/hide timer based on mode
-        const timerElement = document.getElementById('timer');
-        if (mode === 'timed-challenge') {
-            timerElement.classList.remove('hidden');
-            this.startTimer();
-        } else {
-            timerElement.classList.add('hidden');
-        }
+        // Hide timer (not used in new modes)
+        document.getElementById('timer').classList.add('hidden');
 
-        this.showScreen('game-screen');
-        this.nextQuestion();
+        // Load game data
+        try {
+            this.showLoadingState(true);
+            await this.loadGameData(mode);
+            this.showLoadingState(false);
+            this.showScreen('game-screen');
+            this.nextQuestion();
+        } catch (error) {
+            this.showLoadingState(false);
+            this.showError('Failed to load game data. Please try again.');
+        }
     }
 
-    startTimer() {
-        this.updateTimer();
-        this.gameTimer = setInterval(() => {
-            this.timeRemaining--;
-            this.updateTimer();
-            
-            if (this.timeRemaining <= 0) {
-                this.endGame();
-                this.showResults();
-            }
-        }, 1000);
+    async loadGameData(mode) {
+        switch (mode) {
+            case 'current-players':
+                this.currentPlayers = await this.api.getCurrentPlayers();
+                break;
+            case 'new-faces':
+                this.newFaces = await this.api.getNewFaces();
+                break;
+            case 'team-legends':
+                this.legends = await this.api.getTeamLegends();
+                break;
+        }
     }
 
-    updateTimer() {
-        const timerElement = document.getElementById('timer');
-        timerElement.textContent = `Time: ${this.timeRemaining}s`;
-        
-        if (this.timeRemaining <= 10) {
-            timerElement.classList.add('critical');
-        } else {
-            timerElement.classList.remove('critical');
-        }
+    showLoadingState(isLoading) {
+        this.isLoading = isLoading;
+        const loadingText = isLoading ? 'Loading...' : '';
+        // You could add a loading spinner here if needed
+    }
+
+    showError(message) {
+        alert(message); // Simple error display - could be enhanced with better UI
     }
 
     endGame() {
-        if (this.gameTimer) {
-            clearInterval(this.gameTimer);
-            this.gameTimer = null;
-        }
+        // No timers to clear in the new implementation
     }
 
     nextQuestion() {
-        // Check if game should end (except for timed challenge)
-        if (this.currentMode !== 'timed-challenge' && this.questionCount >= this.maxQuestions) {
+        // Check if game should end
+        if (this.questionCount >= this.maxQuestions) {
             this.endGame();
             this.showResults();
             return;
@@ -159,102 +162,210 @@ class KnowYourSteelers {
     }
 
     generateQuestion() {
-        // Get random player
-        const player = this.players[Math.floor(Math.random() * this.players.length)];
-        this.currentAnswer = player;
-
-        const questionElement = document.getElementById('question');
-        const answerInputElement = document.getElementById('answer-input');
-        const multipleChoiceElement = document.getElementById('multiple-choice');
-
-        // Hide all input types first
-        answerInputElement.classList.add('hidden');
-        multipleChoiceElement.classList.add('hidden');
-
+        let questionData;
+        
         switch (this.currentMode) {
+            case 'current-players':
+                questionData = this.generateCurrentPlayerQuestion();
+                break;
+            case 'new-faces':
+                questionData = this.generateNewFaceQuestion();
+                break;
+            case 'team-legends':
+                questionData = this.generateLegendQuestion();
+                break;
+        }
+
+        this.currentQuestionData = questionData;
+        this.displayQuestion(questionData);
+    }
+
+    generateCurrentPlayerQuestion() {
+        const players = this.currentPlayers;
+        if (!players || players.length === 0) {
+            throw new Error('No current players data available');
+        }
+
+        const player = players[Math.floor(Math.random() * players.length)];
+        const questionTypes = ['name-to-number', 'number-to-name', 'position-guess', 'college-guess'];
+        const questionType = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+
+        switch (questionType) {
             case 'name-to-number':
-                questionElement.textContent = `What jersey number does ${player.name} wear?`;
-                answerInputElement.classList.remove('hidden');
-                document.getElementById('answer-text').placeholder = 'Enter jersey number...';
-                break;
-
+                return {
+                    type: 'text',
+                    question: `What jersey number does ${player.name} wear?`,
+                    answer: player.number.toString(),
+                    player: player,
+                    hint: `Position: ${player.position}`
+                };
             case 'number-to-name':
-                questionElement.textContent = `Which player wears jersey number ${player.number}?`;
-                answerInputElement.classList.remove('hidden');
-                document.getElementById('answer-text').placeholder = 'Enter player name...';
-                break;
-
-            case 'multiple-choice':
-            case 'timed-challenge':
-                this.generateMultipleChoiceQuestion(player);
-                break;
+                return {
+                    type: 'text',
+                    question: `Which current Steelers player wears jersey number ${player.number}?`,
+                    answer: player.name,
+                    player: player,
+                    hint: `Position: ${player.position}`
+                };
+            case 'position-guess':
+                return {
+                    type: 'multiple-choice',
+                    question: `What position does ${player.name} play?`,
+                    answer: player.position,
+                    player: player,
+                    choices: this.generatePositionChoices(player.position)
+                };
+            case 'college-guess':
+                return {
+                    type: 'multiple-choice',
+                    question: `Which college did ${player.name} attend?`,
+                    answer: player.college,
+                    player: player,
+                    choices: this.generateCollegeChoices(player.college)
+                };
         }
     }
 
-    generateMultipleChoiceQuestion(correctPlayer) {
-        const questionElement = document.getElementById('question');
-        const multipleChoiceElement = document.getElementById('multiple-choice');
-        
-        // Randomly choose question type for multiple choice
-        const questionType = Math.random() < 0.5 ? 'name-to-number' : 'number-to-name';
-        
-        if (questionType === 'name-to-number') {
-            questionElement.textContent = `What jersey number does ${correctPlayer.name} wear?`;
-            this.generateNumberChoices(correctPlayer);
-        } else {
-            questionElement.textContent = `Which player wears jersey number ${correctPlayer.number}?`;
-            this.generateNameChoices(correctPlayer);
+    generateNewFaceQuestion() {
+        const newFaces = this.newFaces;
+        if (!newFaces || newFaces.length === 0) {
+            // Fallback to current players if no new faces
+            return this.generateCurrentPlayerQuestion();
         }
-        
-        multipleChoiceElement.classList.remove('hidden');
+
+        const player = newFaces[Math.floor(Math.random() * newFaces.length)];
+        const questionTypes = ['name-to-number', 'experience-guess', 'college-guess'];
+        const questionType = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+
+        switch (questionType) {
+            case 'name-to-number':
+                return {
+                    type: 'text',
+                    question: `What jersey number does new addition ${player.name} wear?`,
+                    answer: player.number.toString(),
+                    player: player,
+                    hint: `This ${player.position} joined the Steelers recently`
+                };
+            case 'experience-guess':
+                return {
+                    type: 'multiple-choice',
+                    question: `How many years of NFL experience does ${player.name} have?`,
+                    answer: player.experience.toString(),
+                    player: player,
+                    choices: this.generateExperienceChoices(player.experience)
+                };
+            case 'college-guess':
+                return {
+                    type: 'multiple-choice',
+                    question: `Which college did ${player.name} attend?`,
+                    answer: player.college,
+                    player: player,
+                    choices: this.generateCollegeChoices(player.college)
+                };
+        }
     }
 
-    generateNumberChoices(correctPlayer) {
-        const choices = [correctPlayer.number];
-        const usedNumbers = new Set([correctPlayer.number]);
+    generateLegendQuestion() {
+        const legends = this.legends;
+        if (!legends || legends.length === 0) {
+            throw new Error('No legends data available');
+        }
+
+        const legend = legends[Math.floor(Math.random() * legends.length)];
+        const questionTypes = ['achievement', 'years', 'number', 'fun-fact'];
+        const questionType = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+
+        switch (questionType) {
+            case 'achievement':
+                const achievement = legend.achievements[Math.floor(Math.random() * legend.achievements.length)];
+                return {
+                    type: 'multiple-choice',
+                    question: `Which Steelers legend was known for: "${achievement}"?`,
+                    answer: legend.name,
+                    player: legend,
+                    choices: this.generateLegendChoices(legend.name)
+                };
+            case 'years':
+                return {
+                    type: 'text',
+                    question: `What years did ${legend.name} play for the Steelers?`,
+                    answer: legend.years,
+                    player: legend,
+                    hint: `This ${legend.position} was a key player in Steelers history`
+                };
+            case 'number':
+                return {
+                    type: 'text',
+                    question: `What jersey number did ${legend.name} wear?`,
+                    answer: legend.number.toString(),
+                    player: legend,
+                    hint: `This legendary ${legend.position} played during ${legend.years}`
+                };
+            case 'fun-fact':
+                return {
+                    type: 'multiple-choice',
+                    question: `Which player is known for: "${legend.funFact}"?`,
+                    answer: legend.name,
+                    player: legend,
+                    choices: this.generateLegendChoices(legend.name)
+                };
+        }
+    }
+
+    generatePositionChoices(correctPosition) {
+        const positions = ['QB', 'RB', 'WR', 'TE', 'OT', 'G', 'C', 'DE', 'DT', 'OLB', 'ILB', 'CB', 'S', 'K', 'P'];
+        const choices = [correctPosition];
         
-        // Generate 3 random incorrect numbers
         while (choices.length < 4) {
-            const randomNumber = Math.floor(Math.random() * 99) + 1;
-            if (!usedNumbers.has(randomNumber)) {
-                choices.push(randomNumber);
-                usedNumbers.add(randomNumber);
+            const randomPos = positions[Math.floor(Math.random() * positions.length)];
+            if (!choices.includes(randomPos)) {
+                choices.push(randomPos);
             }
         }
         
-        // Shuffle choices
-        this.shuffleArray(choices);
-        this.correctChoiceIndex = choices.indexOf(correctPlayer.number);
-        
-        // Update choice buttons
-        const choiceButtons = document.querySelectorAll('.choice-btn');
-        choices.forEach((choice, index) => {
-            choiceButtons[index].textContent = choice;
-        });
+        return this.shuffleArray([...choices]);
     }
 
-    generateNameChoices(correctPlayer) {
-        const choices = [correctPlayer.name];
-        const usedPlayers = new Set([correctPlayer.name]);
+    generateCollegeChoices(correctCollege) {
+        const colleges = ['Alabama', 'Ohio State', 'Georgia', 'LSU', 'Clemson', 'Notre Dame', 'Michigan', 'USC', 'Penn State', 'Wisconsin'];
+        const choices = [correctCollege];
         
-        // Generate 3 random incorrect players
         while (choices.length < 4) {
-            const randomPlayer = this.players[Math.floor(Math.random() * this.players.length)];
-            if (!usedPlayers.has(randomPlayer.name)) {
-                choices.push(randomPlayer.name);
-                usedPlayers.add(randomPlayer.name);
+            const randomCollege = colleges[Math.floor(Math.random() * colleges.length)];
+            if (!choices.includes(randomCollege)) {
+                choices.push(randomCollege);
             }
         }
         
-        // Shuffle choices
-        this.shuffleArray(choices);
-        this.correctChoiceIndex = choices.indexOf(correctPlayer.name);
+        return this.shuffleArray([...choices]);
+    }
+
+    generateExperienceChoices(correctExperience) {
+        const choices = [correctExperience.toString()];
+        const baseYears = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         
-        // Update choice buttons
-        const choiceButtons = document.querySelectorAll('.choice-btn');
-        choices.forEach((choice, index) => {
-            choiceButtons[index].textContent = choice;
-        });
+        while (choices.length < 4) {
+            const randomYears = baseYears[Math.floor(Math.random() * baseYears.length)];
+            if (!choices.includes(randomYears.toString())) {
+                choices.push(randomYears.toString());
+            }
+        }
+        
+        return this.shuffleArray([...choices]);
+    }
+
+    generateLegendChoices(correctLegend) {
+        const legendNames = this.legends.map(legend => legend.name);
+        const choices = [correctLegend];
+        
+        while (choices.length < 4) {
+            const randomLegend = legendNames[Math.floor(Math.random() * legendNames.length)];
+            if (!choices.includes(randomLegend)) {
+                choices.push(randomLegend);
+            }
+        }
+        
+        return this.shuffleArray([...choices]);
     }
 
     shuffleArray(array) {
@@ -262,6 +373,36 @@ class KnowYourSteelers {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
         }
+        return array;
+    }
+
+    displayQuestion(questionData) {
+        const questionElement = document.getElementById('question');
+        const answerInputElement = document.getElementById('answer-input');
+        const multipleChoiceElement = document.getElementById('multiple-choice');
+
+        questionElement.textContent = questionData.question;
+
+        // Hide all input types first
+        answerInputElement.classList.add('hidden');
+        multipleChoiceElement.classList.add('hidden');
+
+        if (questionData.type === 'text') {
+            answerInputElement.classList.remove('hidden');
+            document.getElementById('answer-text').placeholder = 'Enter your answer...';
+        } else if (questionData.type === 'multiple-choice') {
+            multipleChoiceElement.classList.remove('hidden');
+            this.setupMultipleChoice(questionData.choices, questionData.answer);
+        }
+    }
+
+    setupMultipleChoice(choices, correctAnswer) {
+        this.correctChoiceIndex = choices.indexOf(correctAnswer);
+        const choiceButtons = document.querySelectorAll('.choice-btn');
+        
+        choices.forEach((choice, index) => {
+            choiceButtons[index].textContent = choice;
+        });
     }
 
     selectChoice(choiceIndex) {
@@ -283,22 +424,8 @@ class KnowYourSteelers {
         const answerText = document.getElementById('answer-text').value.trim();
         if (!answerText) return;
 
-        let isCorrect = false;
-        let correctAnswerText = '';
-
-        switch (this.currentMode) {
-            case 'name-to-number':
-                isCorrect = parseInt(answerText) === this.currentAnswer.number;
-                correctAnswerText = `${this.currentAnswer.name} wears #${this.currentAnswer.number}`;
-                break;
-
-            case 'number-to-name':
-                isCorrect = this.normalizePlayerName(answerText) === this.normalizePlayerName(this.currentAnswer.name);
-                correctAnswerText = `#${this.currentAnswer.number} is ${this.currentAnswer.name}`;
-                break;
-        }
-
-        this.processAnswer(isCorrect, correctAnswerText);
+        const isCorrect = this.checkTextAnswer(answerText);
+        this.processAnswer(isCorrect);
     }
 
     submitMultipleChoice(choiceIndex) {
@@ -314,19 +441,22 @@ class KnowYourSteelers {
             }
         });
 
-        let correctAnswerText = '';
-        if (document.getElementById('question').textContent.includes('jersey number')) {
-            correctAnswerText = `${this.currentAnswer.name} wears #${this.currentAnswer.number}`;
-        } else {
-            correctAnswerText = `#${this.currentAnswer.number} is ${this.currentAnswer.name}`;
-        }
-
-        this.processAnswer(isCorrect, correctAnswerText);
+        this.processAnswer(isCorrect);
     }
 
-    processAnswer(isCorrect, correctAnswerText) {
+    checkTextAnswer(userAnswer) {
+        const correctAnswer = this.currentQuestionData.answer;
+        
+        // Normalize both answers for comparison
+        const normalize = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+        
+        return normalize(userAnswer) === normalize(correctAnswer);
+    }
+
+    processAnswer(isCorrect) {
         const feedbackElement = document.getElementById('feedback');
         const feedbackTextElement = document.getElementById('feedback-text');
+        const questionData = this.currentQuestionData;
 
         if (isCorrect) {
             this.score += 10;
@@ -334,35 +464,36 @@ class KnowYourSteelers {
             feedbackElement.className = 'feedback correct';
             feedbackTextElement.innerHTML = `
                 <div style="color: var(--success-green); font-size: 1.5em; margin-bottom: 10px;">✓ Correct!</div>
-                <div>${correctAnswerText}</div>
+                <div>Answer: ${questionData.answer}</div>
+                ${questionData.hint ? `<div style="margin-top: 10px; color: var(--steelers-silver);">${questionData.hint}</div>` : ''}
                 <div style="margin-top: 10px; color: var(--steelers-silver);">+10 points</div>
             `;
         } else {
             feedbackElement.className = 'feedback incorrect';
             feedbackTextElement.innerHTML = `
                 <div style="color: var(--error-red); font-size: 1.5em; margin-bottom: 10px;">✗ Incorrect</div>
-                <div>${correctAnswerText}</div>
-                <div style="margin-top: 10px; color: var(--steelers-silver);">Position: ${this.currentAnswer.position}</div>
+                <div>Correct Answer: ${questionData.answer}</div>
+                ${questionData.hint ? `<div style="margin-top: 10px; color: var(--steelers-silver);">${questionData.hint}</div>` : ''}
+                ${this.getAdditionalInfo(questionData)}
             `;
         }
 
         feedbackElement.classList.remove('hidden');
         this.updateScore();
         this.updateStats();
-
-        // Auto-advance after delay in timed challenge mode
-        if (this.currentMode === 'timed-challenge') {
-            setTimeout(() => {
-                this.nextQuestion();
-            }, 2000);
-        }
     }
 
-    normalizePlayerName(name) {
-        return name.toLowerCase()
-            .replace(/[^a-z\s]/g, '')
-            .replace(/\s+/g, ' ')
-            .trim();
+    getAdditionalInfo(questionData) {
+        const player = questionData.player;
+        if (!player) return '';
+
+        if (player.years) {
+            // Legend
+            return `<div style="margin-top: 10px; color: var(--steelers-silver);">Years: ${player.years} | Position: ${player.position}</div>`;
+        } else {
+            // Current player
+            return `<div style="margin-top: 10px; color: var(--steelers-silver);">Position: ${player.position} | College: ${player.college}</div>`;
+        }
     }
 
     updateScore() {
