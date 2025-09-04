@@ -1,36 +1,34 @@
 # Know Your Steelers
 
-A fun and interactive web application for practicing Pittsburgh Steelers player names and jersey numbers. Test your knowledge of the current roster through multiple engaging game modes!
+A fun and interactive web application for testing your knowledge of Pittsburgh Steelers players, featuring multiple game modes and live roster data integration.
 
 ## 🏈 Features
 
-- **Complete 2024 Steelers Roster**: Includes all current players with their jersey numbers and positions
-- **Multiple Game Modes**: Four different ways to test your Steelers knowledge
-- **Score Tracking**: Keep track of your progress with persistent statistics
-- **Responsive Design**: Works great on desktop and mobile devices
-- **Steelers Theme**: Beautiful black and gold design matching team colors
+- **Live Roster Data**: Integrates with Sleeper API for current player information
+- **Three Unique Game Modes**: Different ways to test your Steelers knowledge
+- **Mobile Optimized**: Perfect for iPhone and mobile device usage
+- **Score Tracking**: Persistent statistics across sessions
+- **Steelers Theme**: Authentic black and gold design matching team colors
 
 ## 🎮 Game Modes
 
-### 1. Name to Number
-- Given a player's name, guess their jersey number
-- Perfect for learning the current roster
-- Text input for precise answers
+### 1. Current Players
+- Test your knowledge of the current Pittsburgh Steelers roster
+- Questions about jersey numbers, positions, and college backgrounds
+- Features recently updated player data via Sleeper API
+- Perfect for staying current with the active roster
 
-### 2. Number to Name
-- Given a jersey number, guess which player wears it
-- Great for memorizing who plays what number
-- Text input with fuzzy matching for player names
+### 2. New Faces
+- Focus on recently acquired players and rookies
+- Learn about new additions to the team
+- Questions about experience levels and background
+- Great for keeping up with roster changes
 
-### 3. Multiple Choice
-- Choose the correct answer from four options
-- Combines both name-to-number and number-to-name questions
-- Visual feedback with highlighted correct/incorrect answers
-
-### 4. Timed Challenge
-- Answer as many questions as possible in 60 seconds
-- Multiple choice format for quick responses
-- Test your speed and accuracy under pressure
+### 3. Team Legends
+- Discover trivia about legendary Steelers players
+- Historical achievements and fun facts
+- Questions about Hall of Fame players and team history
+- Perfect for longtime fans and trivia enthusiasts
 
 ## 🏆 Statistics Tracking
 
@@ -45,51 +43,67 @@ Statistics are saved locally and persist between sessions.
 
 1. Open `index.html` in any modern web browser
 2. Choose your preferred game mode from the main menu
-3. Start practicing your Steelers knowledge!
+3. Start testing your Steelers knowledge!
+
+No installation required - works directly in your browser.
 
 ## 🎨 Design
 
 The app features:
-- **Pittsburgh Steelers colors**: Black (#000000) and Gold (#FFB612)
-- **Modern UI**: Clean, professional design with smooth animations
+- **Pittsburgh Steelers colors**: Authentic black (#000000) and gold (#FFB612)
+- **Mobile-first design**: Optimized for iPhone and tablet usage
 - **Accessibility**: Clear typography and high contrast for readability
-- **Mobile-friendly**: Responsive layout that works on all devices
+- **Responsive layout**: Works seamlessly on all screen sizes
 
-## 📱 Browser Compatibility
+## 📱 Mobile Compatibility
 
-Works in all modern browsers including:
-- Chrome
-- Firefox
-- Safari
-- Edge
+Specifically optimized for:
+- iPhone (all sizes)
+- Android phones
+- Tablets
+- Desktop browsers
 
 ## 🔧 Technical Details
 
 Built with:
-- **HTML5**: Semantic structure
-- **CSS3**: Modern styling with flexbox/grid and animations
-- **Vanilla JavaScript**: No external dependencies
-- **Local Storage**: Persistent statistics
+- **HTML5**: Semantic structure with accessibility features
+- **CSS3**: Modern responsive design with Flexbox/Grid
+- **Vanilla JavaScript**: No external dependencies for fast loading
+- **Sleeper API Integration**: Live NFL player data
+- **Local Storage**: Persistent user statistics
+- **Progressive Enhancement**: Works offline with fallback data
 
-## 📋 Player Database
+## 🏈 Data Sources
 
-Includes the complete 2024 Pittsburgh Steelers roster with:
-- Quarterbacks (Russell Wilson, Justin Fields, Kyle Allen)
-- Running Backs (Najee Harris, Jaylen Warren, etc.)
-- Wide Receivers (George Pickens, Calvin Austin III, etc.)
-- Tight Ends (Pat Freiermuth, Darnell Washington, etc.)
-- Offensive Line
-- Defensive Line
-- Linebackers (T.J. Watt, Alex Highsmith, Patrick Queen, etc.)
-- Defensive Backs (Minkah Fitzpatrick, Joey Porter Jr., etc.)
-- Special Teams (Chris Boswell, Cameron Johnston, etc.)
+- **Current Players**: Live data from Sleeper API
+- **Team Legends**: Curated historical player database
+- **Trivia Content**: Custom trivia questions and facts
+- **Fallback Data**: Complete offline functionality
+
+## 🛡️ Features
+
+### Input Validation
+- Validates jersey numbers (0-99)
+- Sanitizes player name inputs
+- Prevents invalid submissions
+
+### Error Handling
+- Graceful API failure handling
+- Offline mode with cached data
+- User-friendly error messages
+
+### Performance
+- 30-minute data caching
+- Optimized for mobile networks
+- Fast loading times
 
 ## 🏈 Here We Go Steelers!
 
 Perfect for:
 - Steelers fans wanting to learn the current roster
-- Fantasy football players
-- Anyone preparing for trivia night
-- Football enthusiasts testing their knowledge
+- Testing knowledge of team history and legends
+- Staying updated with new player acquisitions
+- Mobile gaming during game day
+- Fantasy football preparation
 
-Go Steelers! 🖤💛
+**Here We Go Steelers!** 🖤💛
