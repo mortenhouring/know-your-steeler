@@ -1,0 +1,578 @@
+/* Pittsburgh Steelers Color Scheme */
+:root {
+    --steelers-black: #000000;
+    --steelers-gold: #FFB612;
+    --steelers-white: #FFFFFF;
+    --steelers-silver: #C4C4C4;
+    --steelers-dark-gold: #E6A500;
+    --success-green: #28a745;
+    --error-red: #dc3545;
+    --warning-orange: #fd7e14;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, var(--steelers-black) 0%, #1a1a1a 100%);
+    color: var(--steelers-white);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px 0;
+    border-bottom: 3px solid var(--steelers-gold);
+}
+
+.title {
+    font-size: 3.5em;
+    font-weight: 700;
+    color: var(--steelers-gold);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    font-size: 1.2em;
+    color: var(--steelers-silver);
+    font-weight: 300;
+}
+
+.main {
+    position: relative;
+}
+
+.screen {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.screen.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Main Menu Styles */
+.game-modes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.game-mode-btn {
+    background: linear-gradient(145deg, var(--steelers-black), #1a1a1a);
+    border: 2px solid var(--steelers-gold);
+    border-radius: 15px;
+    padding: 30px;
+    color: var(--steelers-white);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.game-mode-btn:hover {
+    transform: translateY(-5px);
+    border-color: var(--steelers-dark-gold);
+    box-shadow: 0 8px 25px rgba(255, 182, 18, 0.3);
+    background: linear-gradient(145deg, #1a1a1a, var(--steelers-black));
+}
+
+.game-mode-btn h3 {
+    color: var(--steelers-gold);
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.game-mode-btn p {
+    color: var(--steelers-silver);
+    line-height: 1.4;
+    font-weight: 300;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    background: rgba(255, 182, 18, 0.1);
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid var(--steelers-gold);
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    color: var(--steelers-silver);
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    font-weight: 300;
+}
+
+.stat-value {
+    display: block;
+    color: var(--steelers-gold);
+    font-size: 1.8em;
+    font-weight: 700;
+}
+
+/* Game Screen Styles */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.back-btn {
+    background: transparent;
+    border: 2px solid var(--steelers-silver);
+    color: var(--steelers-silver);
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1em;
+}
+
+.back-btn:hover {
+    border-color: var(--steelers-gold);
+    color: var(--steelers-gold);
+    transform: translateX(-5px);
+}
+
+.game-info {
+    text-align: right;
+    flex-grow: 1;
+}
+
+.current-mode {
+    color: var(--steelers-gold);
+    font-size: 1.2em;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.score-display {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.timer {
+    color: var(--warning-orange);
+    font-weight: 700;
+    font-size: 1.1em;
+}
+
+.timer.critical {
+    color: var(--error-red);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.question-container {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255, 182, 18, 0.3);
+    text-align: center;
+}
+
+.question {
+    font-size: 2em;
+    margin-bottom: 30px;
+    color: var(--steelers-white);
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+.answer-input {
+    display: flex;
+    gap: 15px;
+    max-width: 400px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#answer-text {
+    flex: 1;
+    min-width: 200px;
+    padding: 15px;
+    font-size: 1.2em;
+    border: 2px solid var(--steelers-silver);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--steelers-white);
+    text-align: center;
+    transition: border-color 0.3s ease;
+}
+
+#answer-text:focus {
+    outline: none;
+    border-color: var(--steelers-gold);
+    box-shadow: 0 0 10px rgba(255, 182, 18, 0.3);
+}
+
+#answer-text::placeholder {
+    color: var(--steelers-silver);
+}
+
+.submit-btn {
+    padding: 15px 30px;
+    background: linear-gradient(145deg, var(--steelers-gold), var(--steelers-dark-gold));
+    border: none;
+    border-radius: 10px;
+    color: var(--steelers-black);
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 182, 18, 0.4);
+}
+
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.multiple-choice {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.choice-btn {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid var(--steelers-silver);
+    border-radius: 15px;
+    color: var(--steelers-white);
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.choice-btn:hover {
+    border-color: var(--steelers-gold);
+    background: rgba(255, 182, 18, 0.1);
+    transform: translateY(-2px);
+}
+
+.choice-btn.selected {
+    border-color: var(--steelers-gold);
+    background: rgba(255, 182, 18, 0.2);
+}
+
+.choice-btn.correct {
+    border-color: var(--success-green);
+    background: rgba(40, 167, 69, 0.2);
+}
+
+.choice-btn.incorrect {
+    border-color: var(--error-red);
+    background: rgba(220, 53, 69, 0.2);
+}
+
+.feedback {
+    text-align: center;
+    padding: 30px;
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+.feedback.correct {
+    background: rgba(40, 167, 69, 0.2);
+    border: 2px solid var(--success-green);
+}
+
+.feedback.incorrect {
+    background: rgba(220, 53, 69, 0.2);
+    border: 2px solid var(--error-red);
+}
+
+#feedback-text {
+    font-size: 1.3em;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.next-btn {
+    padding: 15px 30px;
+    background: linear-gradient(145deg, var(--steelers-gold), var(--steelers-dark-gold));
+    border: none;
+    border-radius: 10px;
+    color: var(--steelers-black);
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.next-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 182, 18, 0.4);
+}
+
+/* Results Screen Styles */
+.results-container {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 182, 18, 0.3);
+}
+
+.results-container h2 {
+    color: var(--steelers-gold);
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.results-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.result-stat {
+    padding: 20px;
+    background: rgba(255, 182, 18, 0.1);
+    border-radius: 15px;
+    border: 1px solid var(--steelers-gold);
+}
+
+.result-label {
+    display: block;
+    color: var(--steelers-silver);
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    font-weight: 300;
+}
+
+.result-value {
+    display: block;
+    color: var(--steelers-gold);
+    font-size: 2em;
+    font-weight: 700;
+}
+
+.results-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    padding: 15px 30px;
+    background: linear-gradient(145deg, var(--steelers-gold), var(--steelers-dark-gold));
+    border: none;
+    border-radius: 10px;
+    color: var(--steelers-black);
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 182, 18, 0.4);
+}
+
+.action-btn.secondary {
+    background: transparent;
+    border: 2px solid var(--steelers-silver);
+    color: var(--steelers-silver);
+}
+
+.action-btn.secondary:hover {
+    border-color: var(--steelers-gold);
+    color: var(--steelers-gold);
+    box-shadow: 0 5px 15px rgba(255, 182, 18, 0.2);
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .title {
+        font-size: 2.5em;
+        letter-spacing: 1px;
+    }
+    
+    .subtitle {
+        font-size: 1em;
+    }
+    
+    .game-modes {
+        grid-template-columns: 1fr;
+    }
+    
+    .game-mode-btn {
+        padding: 25px;
+    }
+    
+    .stats {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .game-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .game-info {
+        text-align: center;
+    }
+    
+    .score-display {
+        justify-content: center;
+    }
+    
+    .question {
+        font-size: 1.5em;
+    }
+    
+    .question-container {
+        padding: 25px;
+    }
+    
+    .answer-input {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    #answer-text {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .multiple-choice {
+        grid-template-columns: 1fr;
+    }
+    
+    .results-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .results-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 2em;
+    }
+    
+    .game-mode-btn {
+        padding: 20px;
+    }
+    
+    .game-mode-btn h3 {
+        font-size: 1.3em;
+    }
+    
+    .question {
+        font-size: 1.3em;
+    }
+    
+    .choice-btn {
+        padding: 15px;
+        font-size: 1em;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.screen.active {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes correctAnswer {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.feedback.correct {
+    animation: correctAnswer 0.6s ease-out;
+}
+
+@keyframes incorrectAnswer {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+    100% { transform: translateX(0); }
+}
+
+.feedback.incorrect {
+    animation: incorrectAnswer 0.6s ease-out;
+}
