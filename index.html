@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Know Your Steelers</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Know Your Steelers</h1>
+            <p class="subtitle">Practice Pittsburgh Steelers players and numbers</p>
+        </header>
+
+        <main class="main">
+            <!-- Main Menu -->
+            <div id="main-menu" class="screen active">
+                <div class="game-modes">
+                    <button class="game-mode-btn" data-mode="name-to-number">
+                        <h3>Name to Number</h3>
+                        <p>Given a player name, guess their jersey number</p>
+                    </button>
+                    <button class="game-mode-btn" data-mode="number-to-name">
+                        <h3>Number to Name</h3>
+                        <p>Given a jersey number, guess the player name</p>
+                    </button>
+                    <button class="game-mode-btn" data-mode="multiple-choice">
+                        <h3>Multiple Choice</h3>
+                        <p>Choose the correct answer from multiple options</p>
+                    </button>
+                    <button class="game-mode-btn" data-mode="timed-challenge">
+                        <h3>Timed Challenge</h3>
+                        <p>Answer as many questions as possible in 60 seconds</p>
+                    </button>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label">Total Correct:</span>
+                        <span id="total-correct" class="stat-value">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Total Played:</span>
+                        <span id="total-played" class="stat-value">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Accuracy:</span>
+                        <span id="accuracy" class="stat-value">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Screen -->
+            <div id="game-screen" class="screen">
+                <div class="game-header">
+                    <button id="back-btn" class="back-btn">← Back to Menu</button>
+                    <div class="game-info">
+                        <span id="current-mode" class="current-mode"></span>
+                        <div class="score-display">
+                            <span id="current-score">Score: 0</span>
+                            <span id="timer" class="timer hidden">Time: 60s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-container">
+                    <div id="question" class="question"></div>
+                    <div id="answer-input" class="answer-input">
+                        <input type="text" id="answer-text" placeholder="Enter your answer..." autocomplete="off">
+                        <button id="submit-answer" class="submit-btn">Submit</button>
+                    </div>
+                    <div id="multiple-choice" class="multiple-choice hidden">
+                        <button class="choice-btn" data-choice="0"></button>
+                        <button class="choice-btn" data-choice="1"></button>
+                        <button class="choice-btn" data-choice="2"></button>
+                        <button class="choice-btn" data-choice="3"></button>
+                    </div>
+                </div>
+
+                <div id="feedback" class="feedback hidden">
+                    <div id="feedback-text"></div>
+                    <button id="next-question" class="next-btn">Next Question</button>
+                </div>
+            </div>
+
+            <!-- Results Screen -->
+            <div id="results-screen" class="screen">
+                <div class="results-container">
+                    <h2>Game Complete!</h2>
+                    <div class="results-stats">
+                        <div class="result-stat">
+                            <span class="result-label">Final Score:</span>
+                            <span id="final-score" class="result-value">0</span>
+                        </div>
+                        <div class="result-stat">
+                            <span class="result-label">Correct Answers:</span>
+                            <span id="final-correct" class="result-value">0</span>
+                        </div>
+                        <div class="result-stat">
+                            <span class="result-label">Total Questions:</span>
+                            <span id="final-total" class="result-value">0</span>
+                        </div>
+                        <div class="result-stat">
+                            <span class="result-label">Accuracy:</span>
+                            <span id="final-accuracy" class="result-value">0%</span>
+                        </div>
+                    </div>
+                    <div class="results-actions">
+                        <button id="play-again" class="action-btn">Play Again</button>
+                        <button id="back-to-menu" class="action-btn secondary">Back to Menu</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="players.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
