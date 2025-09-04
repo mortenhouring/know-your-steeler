@@ -244,14 +244,51 @@ class SteelersAPI {
         ];
     }
 
-    // Error handling wrapper
+    // Validate inputs before processing
+    validateInput(input, type = 'text') {
+        if (!input || typeof input !== 'string') {
+            return false;
+        }
+        
+        input = input.trim();
+        
+        switch (type) {
+            case 'number':
+                return /^\d+$/.test(input) && parseInt(input) >= 0 && parseInt(input) <= 99;
+            case 'name':
+                return input.length >= 2 && input.length <= 50 && /^[a-zA-Z\s\.\-']+$/.test(input);
+            case 'text':
+            default:
+                return input.length > 0 && input.length <= 100;
+        }
+    }
+
+    // Enhanced error handling wrapper
     async safeApiCall(apiFunction) {
         try {
             return await apiFunction();
         } catch (error) {
             console.error('API call failed:', error);
-            throw new Error('Unable to fetch data. Please check your connection and try again.');
+            
+            // Log error details for debugging
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                throw new Error('Network connection failed. Please check your internet connection and try again.');
+            } else if (error.name === 'SyntaxError') {
+                throw new Error('Invalid data received from server. Please try again later.');
+            } else {
+                throw new Error('Unable to fetch data. Please try again later.');
+            }
         }
+    }
+
+    // Input validation method
+    sanitizeInput(input) {
+        if (typeof input !== 'string') return '';
+        
+        return input
+            .trim()
+            .replace(/[<>\"'&]/g, '') // Remove potential HTML injection characters
+            .substring(0, 100); // Limit length
     }
 }
 

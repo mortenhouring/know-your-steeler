@@ -424,8 +424,58 @@ class KnowYourSteelers {
         const answerText = document.getElementById('answer-text').value.trim();
         if (!answerText) return;
 
-        const isCorrect = this.checkTextAnswer(answerText);
+        // Validate input based on question type
+        const questionData = this.currentQuestionData;
+        let inputType = 'text';
+        
+        // Check if question asks for a number
+        if (questionData.question.toLowerCase().includes('jersey number does') || 
+            questionData.question.toLowerCase().includes('number does') ||
+            questionData.question.toLowerCase().includes('what jersey number') ||
+            questionData.question.toLowerCase().includes('what number')) {
+            inputType = 'number';
+        } 
+        // Check if question asks for a player name
+        else if (questionData.question.toLowerCase().includes('which player') || 
+                 questionData.question.toLowerCase().includes('player wears') ||
+                 questionData.question.toLowerCase().includes('who wears')) {
+            inputType = 'name';
+        }
+
+        if (!this.api.validateInput(answerText, inputType)) {
+            this.showValidationError(inputType);
+            return;
+        }
+
+        // Sanitize input
+        const sanitizedAnswer = this.api.sanitizeInput(answerText);
+        const isCorrect = this.checkTextAnswer(sanitizedAnswer);
         this.processAnswer(isCorrect);
+    }
+
+    showValidationError(inputType) {
+        let message = '';
+        switch (inputType) {
+            case 'number':
+                message = 'Please enter a valid jersey number (0-99)';
+                break;
+            case 'name':
+                message = 'Please enter a valid player name (letters only)';
+                break;
+            default:
+                message = 'Please enter a valid answer';
+        }
+        
+        // Show temporary error message
+        const answerInput = document.getElementById('answer-text');
+        const originalPlaceholder = answerInput.placeholder;
+        answerInput.placeholder = message;
+        answerInput.style.borderColor = 'var(--error-red)';
+        
+        setTimeout(() => {
+            answerInput.placeholder = originalPlaceholder;
+            answerInput.style.borderColor = 'var(--steelers-silver)';
+        }, 3000);
     }
 
     submitMultipleChoice(choiceIndex) {
