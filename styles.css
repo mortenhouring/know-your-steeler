@@ -210,6 +210,40 @@ body {
     text-align: center;
 }
 
+.player-image-container {
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.player-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid var(--steelers-gold);
+    object-fit: cover;
+    box-shadow: 0 5px 15px rgba(255, 182, 18, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.player-image:hover {
+    transform: scale(1.05);
+}
+
+.player-info {
+    color: var(--steelers-silver);
+    font-size: 1em;
+    text-align: center;
+    font-weight: 300;
+}
+
+.player-info strong {
+    color: var(--steelers-gold);
+    font-weight: 500;
+}
+
 .question {
     font-size: 2em;
     margin-bottom: 30px;
@@ -499,6 +533,15 @@ body {
         padding: 25px;
     }
     
+    .player-image {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .player-image-container {
+        margin-bottom: 20px;
+    }
+    
     .answer-input {
         flex-direction: column;
         align-items: center;
@@ -538,6 +581,11 @@ body {
     
     .question {
         font-size: 1.3em;
+    }
+    
+    .player-image {
+        width: 80px;
+        height: 80px;
     }
     
     .choice-btn {

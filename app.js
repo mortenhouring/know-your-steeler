@@ -187,7 +187,7 @@ class KnowYourSteelers {
         }
 
         const player = players[Math.floor(Math.random() * players.length)];
-        const questionTypes = ['name-to-number', 'number-to-name', 'position-guess', 'college-guess'];
+        const questionTypes = ['name-to-number', 'number-to-name', 'position-guess', 'college-guess', 'experience-guess', 'age-guess'];
         const questionType = questionTypes[Math.floor(Math.random() * questionTypes.length)];
 
         switch (questionType) {
@@ -197,7 +197,7 @@ class KnowYourSteelers {
                     question: `What jersey number does ${player.name} wear?`,
                     answer: player.number.toString(),
                     player: player,
-                    hint: `Position: ${player.position}`
+                    hint: `This ${player.position} has ${player.experience} years of experience`
                 };
             case 'number-to-name':
                 return {
@@ -205,7 +205,7 @@ class KnowYourSteelers {
                     question: `Which current Steelers player wears jersey number ${player.number}?`,
                     answer: player.name,
                     player: player,
-                    hint: `Position: ${player.position}`
+                    hint: `This ${player.position} attended ${player.college}`
                 };
             case 'position-guess':
                 return {
@@ -222,6 +222,22 @@ class KnowYourSteelers {
                     answer: player.college,
                     player: player,
                     choices: this.generateCollegeChoices(player.college)
+                };
+            case 'experience-guess':
+                return {
+                    type: 'multiple-choice',
+                    question: `How many years of NFL experience does ${player.name} have?`,
+                    answer: player.experience.toString(),
+                    player: player,
+                    choices: this.generateExperienceChoices(player.experience)
+                };
+            case 'age-guess':
+                return {
+                    type: 'multiple-choice',
+                    question: `How old is ${player.name}?`,
+                    answer: player.age.toString(),
+                    player: player,
+                    choices: this.generateAgeChoices(player.age)
                 };
         }
     }
@@ -272,7 +288,7 @@ class KnowYourSteelers {
         }
 
         const legend = legends[Math.floor(Math.random() * legends.length)];
-        const questionTypes = ['achievement', 'years', 'number', 'fun-fact'];
+        const questionTypes = ['achievement', 'years', 'number', 'fun-fact', 'position', 'achievement-player'];
         const questionType = questionTypes[Math.floor(Math.random() * questionTypes.length)];
 
         switch (questionType) {
@@ -291,7 +307,7 @@ class KnowYourSteelers {
                     question: `What years did ${legend.name} play for the Steelers?`,
                     answer: legend.years,
                     player: legend,
-                    hint: `This ${legend.position} was a key player in Steelers history`
+                    hint: `This ${legend.position} was inducted into the Hall of Fame`
                 };
             case 'number':
                 return {
@@ -305,6 +321,22 @@ class KnowYourSteelers {
                 return {
                     type: 'multiple-choice',
                     question: `Which player is known for: "${legend.funFact}"?`,
+                    answer: legend.name,
+                    player: legend,
+                    choices: this.generateLegendChoices(legend.name)
+                };
+            case 'position':
+                return {
+                    type: 'multiple-choice',
+                    question: `What position did ${legend.name} play?`,
+                    answer: legend.position,
+                    player: legend,
+                    choices: this.generatePositionChoices(legend.position)
+                };
+            case 'achievement-player':
+                return {
+                    type: 'multiple-choice',
+                    question: `Who wore #${legend.number} and played ${legend.position} during ${legend.years}?`,
                     answer: legend.name,
                     player: legend,
                     choices: this.generateLegendChoices(legend.name)
@@ -354,6 +386,20 @@ class KnowYourSteelers {
         return this.shuffleArray([...choices]);
     }
 
+    generateAgeChoices(correctAge) {
+        const choices = [correctAge.toString()];
+        const baseAges = [22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35];
+        
+        while (choices.length < 4) {
+            const randomAge = baseAges[Math.floor(Math.random() * baseAges.length)];
+            if (!choices.includes(randomAge.toString())) {
+                choices.push(randomAge.toString());
+            }
+        }
+        
+        return this.shuffleArray([...choices]);
+    }
+
     generateLegendChoices(correctLegend) {
         const legendNames = this.legends.map(legend => legend.name);
         const choices = [correctLegend];
@@ -380,8 +426,31 @@ class KnowYourSteelers {
         const questionElement = document.getElementById('question');
         const answerInputElement = document.getElementById('answer-input');
         const multipleChoiceElement = document.getElementById('multiple-choice');
+        const playerImageContainer = document.getElementById('player-image-container');
+        const playerImage = document.getElementById('player-image');
+        const playerInfo = document.getElementById('player-info');
 
         questionElement.textContent = questionData.question;
+
+        // Show player image and info if available
+        if (questionData.player && questionData.player.image) {
+            playerImage.src = questionData.player.image;
+            playerImage.alt = `${questionData.player.name} photo`;
+            
+            let infoText = `<strong>#${questionData.player.number}</strong>`;
+            if (questionData.player.years) {
+                // Legend
+                infoText += ` | ${questionData.player.years}`;
+            } else {
+                // Current player
+                infoText += ` | ${questionData.player.experience} years exp`;
+            }
+            playerInfo.innerHTML = infoText;
+            
+            playerImageContainer.classList.remove('hidden');
+        } else {
+            playerImageContainer.classList.add('hidden');
+        }
 
         // Hide all input types first
         answerInputElement.classList.add('hidden');
@@ -517,6 +586,7 @@ class KnowYourSteelers {
                 <div>Answer: ${questionData.answer}</div>
                 ${questionData.hint ? `<div style="margin-top: 10px; color: var(--steelers-silver);">${questionData.hint}</div>` : ''}
                 <div style="margin-top: 10px; color: var(--steelers-silver);">+10 points</div>
+                ${this.getAdditionalInfo(questionData)}
             `;
         } else {
             feedbackElement.className = 'feedback incorrect';
@@ -537,13 +607,30 @@ class KnowYourSteelers {
         const player = questionData.player;
         if (!player) return '';
 
+        let additionalInfo = '';
+        
         if (player.years) {
             // Legend
-            return `<div style="margin-top: 10px; color: var(--steelers-silver);">Years: ${player.years} | Position: ${player.position}</div>`;
+            additionalInfo = `<div style="margin-top: 15px; color: var(--steelers-silver); line-height: 1.4;">
+                <strong>Career:</strong> ${player.years} | <strong>Position:</strong> ${player.position}<br>`;
+            
+            if (player.achievements && player.achievements.length > 0) {
+                additionalInfo += `<strong>Achievements:</strong> ${player.achievements.slice(0, 2).join(', ')}<br>`;
+            }
+            
+            if (player.funFact) {
+                additionalInfo += `<strong>Fun Fact:</strong> ${player.funFact}`;
+            }
+            additionalInfo += `</div>`;
         } else {
             // Current player
-            return `<div style="margin-top: 10px; color: var(--steelers-silver);">Position: ${player.position} | College: ${player.college}</div>`;
+            additionalInfo = `<div style="margin-top: 15px; color: var(--steelers-silver); line-height: 1.4;">
+                <strong>Position:</strong> ${player.position} | <strong>College:</strong> ${player.college}<br>
+                <strong>Experience:</strong> ${player.experience} years | <strong>Age:</strong> ${player.age}
+            </div>`;
         }
+        
+        return additionalInfo;
     }
 
     updateScore() {

@@ -108,37 +108,58 @@ class SteelersAPI {
     getFallbackCurrentPlayers() {
         return [
             // Quarterbacks
-            { name: "Russell Wilson", number: 3, position: "QB", age: 35, experience: 12, college: "Wisconsin" },
-            { name: "Justin Fields", number: 2, position: "QB", age: 25, experience: 3, college: "Ohio State" },
-            { name: "Kyle Allen", number: 8, position: "QB", age: 28, experience: 6, college: "Houston" },
+            { name: "Russell Wilson", number: 3, position: "QB", age: 35, experience: 12, college: "Wisconsin", 
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=RW" },
+            { name: "Justin Fields", number: 2, position: "QB", age: 25, experience: 3, college: "Ohio State",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=JF" },
+            { name: "Kyle Allen", number: 8, position: "QB", age: 28, experience: 6, college: "Houston",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=KA" },
 
             // Running Backs
-            { name: "Najee Harris", number: 22, position: "RB", age: 26, experience: 3, college: "Alabama" },
-            { name: "Jaylen Warren", number: 30, position: "RB", age: 25, experience: 2, college: "Oklahoma State" },
-            { name: "Cordarrelle Patterson", number: 84, position: "RB", age: 33, experience: 11, college: "Tennessee" },
+            { name: "Najee Harris", number: 22, position: "RB", age: 26, experience: 3, college: "Alabama",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=NH" },
+            { name: "Jaylen Warren", number: 30, position: "RB", age: 25, experience: 2, college: "Oklahoma State",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=JW" },
+            { name: "Cordarrelle Patterson", number: 84, position: "RB", age: 33, experience: 11, college: "Tennessee",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=CP" },
 
             // Wide Receivers
-            { name: "George Pickens", number: 14, position: "WR", age: 23, experience: 2, college: "Georgia" },
-            { name: "Calvin Austin III", number: 19, position: "WR", age: 25, experience: 2, college: "Memphis" },
-            { name: "Van Jefferson", number: 18, position: "WR", age: 28, experience: 4, college: "Florida" },
-            { name: "Mike Williams", number: 7, position: "WR", age: 30, experience: 7, college: "Clemson" },
+            { name: "George Pickens", number: 14, position: "WR", age: 23, experience: 2, college: "Georgia",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=GP" },
+            { name: "Calvin Austin III", number: 19, position: "WR", age: 25, experience: 2, college: "Memphis",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=CA" },
+            { name: "Van Jefferson", number: 18, position: "WR", age: 28, experience: 4, college: "Florida",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=VJ" },
+            { name: "Mike Williams", number: 7, position: "WR", age: 30, experience: 7, college: "Clemson",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=MW" },
 
             // Tight Ends
-            { name: "Pat Freiermuth", number: 88, position: "TE", age: 25, experience: 3, college: "Penn State" },
-            { name: "Darnell Washington", number: 11, position: "TE", age: 22, experience: 1, college: "Georgia" },
+            { name: "Pat Freiermuth", number: 88, position: "TE", age: 25, experience: 3, college: "Penn State",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=PF" },
+            { name: "Darnell Washington", number: 11, position: "TE", age: 22, experience: 1, college: "Georgia",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=DW" },
 
             // Defensive Players
-            { name: "T.J. Watt", number: 90, position: "OLB", age: 29, experience: 7, college: "Wisconsin" },
-            { name: "Minkah Fitzpatrick", number: 39, position: "S", age: 27, experience: 6, college: "Alabama" },
-            { name: "Cameron Heyward", number: 97, position: "DT", age: 35, experience: 13, college: "Ohio State" },
-            { name: "Alex Highsmith", number: 56, position: "OLB", age: 27, experience: 4, college: "Charlotte" },
-            { name: "Patrick Queen", number: 6, position: "LB", age: 25, experience: 4, college: "LSU" },
-            { name: "Joey Porter Jr.", number: 24, position: "CB", age: 24, experience: 1, college: "Penn State" },
-            { name: "Donte Jackson", number: 26, position: "CB", age: 29, experience: 6, college: "LSU" },
+            { name: "T.J. Watt", number: 90, position: "OLB", age: 29, experience: 7, college: "Wisconsin",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=TW" },
+            { name: "Minkah Fitzpatrick", number: 39, position: "S", age: 27, experience: 6, college: "Alabama",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=MF" },
+            { name: "Cameron Heyward", number: 97, position: "DT", age: 35, experience: 13, college: "Ohio State",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=CH" },
+            { name: "Alex Highsmith", number: 56, position: "OLB", age: 27, experience: 4, college: "Charlotte",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=AH" },
+            { name: "Patrick Queen", number: 6, position: "LB", age: 25, experience: 4, college: "LSU",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=PQ" },
+            { name: "Joey Porter Jr.", number: 24, position: "CB", age: 24, experience: 1, college: "Penn State",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=JP" },
+            { name: "Donte Jackson", number: 26, position: "CB", age: 29, experience: 6, college: "LSU",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=DJ" },
 
             // Special Teams
-            { name: "Chris Boswell", number: 9, position: "K", age: 33, experience: 9, college: "Rice" },
-            { name: "Cameron Johnston", number: 4, position: "P", age: 32, experience: 6, college: "Ohio State" }
+            { name: "Chris Boswell", number: 9, position: "K", age: 33, experience: 9, college: "Rice",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=CB" },
+            { name: "Cameron Johnston", number: 4, position: "P", age: 32, experience: 6, college: "Ohio State",
+              image: "https://via.placeholder.com/120x120/FFB612/000000?text=CJ" }
         ];
     }
 
@@ -151,7 +172,8 @@ class SteelersAPI {
                 position: "QB",
                 years: "1970-1983",
                 achievements: ["4x Super Bowl Champion", "2x Super Bowl MVP", "Hall of Fame"],
-                funFact: "First QB to throw for 300+ yards in a Super Bowl"
+                funFact: "First QB to throw for 300+ yards in a Super Bowl",
+                image: "https://via.placeholder.com/120x120/FFB612/000000?text=TB"
             },
             {
                 name: "Franco Harris",
@@ -159,7 +181,8 @@ class SteelersAPI {
                 position: "RB",
                 years: "1972-1983",
                 achievements: ["4x Super Bowl Champion", "Super Bowl IX MVP", "Hall of Fame"],
-                funFact: "Famous for the 'Immaculate Reception' in 1972"
+                funFact: "Famous for the 'Immaculate Reception' in 1972",
+                image: "https://via.placeholder.com/120x120/FFB612/000000?text=FH"
             },
             {
                 name: "Joe Greene",
@@ -167,7 +190,8 @@ class SteelersAPI {
                 position: "DT",
                 years: "1969-1981",
                 achievements: ["4x Super Bowl Champion", "2x Defensive Player of the Year", "Hall of Fame"],
-                funFact: "Anchor of the 'Steel Curtain' defense"
+                funFact: "Anchor of the 'Steel Curtain' defense",
+                image: "https://via.placeholder.com/120x120/FFB612/000000?text=JG"
             },
             {
                 name: "Lynn Swann",
@@ -175,7 +199,8 @@ class SteelersAPI {
                 position: "WR",
                 years: "1974-1982",
                 achievements: ["4x Super Bowl Champion", "Super Bowl X MVP", "Hall of Fame"],
-                funFact: "Known for his acrobatic catches and ballet background"
+                funFact: "Known for his acrobatic catches and ballet background",
+                image: "https://via.placeholder.com/120x120/FFB612/000000?text=LS"
             },
             {
                 name: "Jack Lambert",
@@ -183,7 +208,8 @@ class SteelersAPI {
                 position: "LB",
                 years: "1974-1984",
                 achievements: ["4x Super Bowl Champion", "2x Defensive Player of the Year", "Hall of Fame"],
-                funFact: "The toothless intimidator of the Steel Curtain"
+                funFact: "The toothless intimidator of the Steel Curtain",
+                image: "https://via.placeholder.com/120x120/FFB612/000000?text=JL"
             },
             {
                 name: "Ben Roethlisberger",
@@ -191,7 +217,8 @@ class SteelersAPI {
                 position: "QB",
                 years: "2004-2021",
                 achievements: ["2x Super Bowl Champion", "6x Pro Bowl", "Rookie of the Year"],
-                funFact: "Won Super Bowl XL at age 23, youngest QB to win Super Bowl"
+                funFact: "Won Super Bowl XL at age 23, youngest QB to win Super Bowl",
+                image: "https://via.placeholder.com/120x120/FFB612/000000?text=BR"
             },
             {
                 name: "Troy Polamalu",
@@ -199,7 +226,8 @@ class SteelersAPI {
                 position: "S",
                 years: "2003-2014",
                 achievements: ["2x Super Bowl Champion", "Defensive Player of the Year", "Hall of Fame"],
-                funFact: "Famous for his flowing hair and instinctive play"
+                funFact: "Famous for his flowing hair and instinctive play",
+                image: "https://via.placeholder.com/120x120/FFB612/000000?text=TP"
             },
             {
                 name: "Hines Ward",
@@ -207,7 +235,8 @@ class SteelersAPI {
                 position: "WR",
                 years: "1998-2011",
                 achievements: ["2x Super Bowl Champion", "Super Bowl XL MVP", "4x Pro Bowl"],
-                funFact: "Known for his blocking and infectious smile"
+                funFact: "Known for his blocking and infectious smile",
+                image: "https://via.placeholder.com/120x120/FFB612/000000?text=HW"
             }
         ];
     }
